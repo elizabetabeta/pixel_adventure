@@ -13,10 +13,10 @@
                 2
             ],
             "scale": 1.5,
-            "selectedLayer": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 358,
-                "y": 184.99999999999997
+                "x": 309.33333333333326,
+                "y": 186.33333333333337
             }
         },
         "Level-02.tmx": {
@@ -26,7 +26,7 @@
             "scale": 1.845078125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 319.7696574501419,
+                "x": 319.76965745014184,
                 "y": 184.0030486513952
             }
         },
@@ -35,8 +35,10 @@
             "scaleInEditor": 1
         }
     },
+    "last.exportedFilePath": "C:/Users/Elizabeta/Desktop",
     "last.imagePath": "C:/Users/Elizabeta/Desktop/pixel_adventure/assets/images/Terrain",
     "map.height": 23,
+    "map.lastUsedExportFilter": "All Files (*)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
@@ -47,6 +49,7 @@
         "Level-02.tmx"
     ],
     "project": "PixelAdventure.tiled-project",
+    "property.type": "float",
     "recentFiles": [
         "Pixel Adventure.tsx",
         "Level-02.tmx",
