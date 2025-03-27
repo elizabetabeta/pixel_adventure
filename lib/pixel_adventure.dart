@@ -5,16 +5,20 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/painting.dart';
+import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
 
-class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection {
+class PixelAdventure extends FlameGame with 
+    HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection, TapCallbacks {
 
     @override
     Color backgroundColor() => const Color(0xFF211F30);
     Player player = Player(character: 'Ninja Frog');
     late JoystickComponent joystick;
-    bool showrJoystick = false;
+    bool showControls = true;
+    bool playSounds = true;
+    double soundVolume = 1.0;
     List<String> levelNames = ['Level-01', 'Level-01'];
     int currentLevelIndex = 0;
 
@@ -26,8 +30,9 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
         _loadLevel();
 
 
-        if (showrJoystick) {
+        if (showControls) {
             addJoystick();
+            add(JumpButton());
         }
 
         return super.onLoad();
@@ -35,7 +40,7 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
 
     @override
     void update(double dt) {
-    if (showrJoystick) {
+    if (showControls) {
         updateJoystick();
     }
     super.update(dt);
@@ -43,6 +48,7 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
 
     void addJoystick() {
         joystick = JoystickComponent(
+            priority: 10,
             knob: SpriteComponent(
                 sprite: Sprite(
                     images.fromCache('HUD/Knob.png'),
@@ -54,13 +60,13 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
                     images.fromCache('HUD/Joystick.png'),
                 ),
             ),
-            margin: const EdgeInsets.only(right: -240, bottom: -100),
-            priority: 100,
+            margin: const EdgeInsets.only(left: 32, bottom: 32),
+
         );
 
         add(joystick);
     }
-    
+
       void updateJoystick() {
         switch (joystick.direction) {
             case JoystickDirection.left:
@@ -81,11 +87,15 @@ class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCa
 
 
       void loadNextLevel() {
+        removeWhere((component) => component is Level);
+        
         if(currentLevelIndex < levelNames.length - 1) {
           currentLevelIndex++;
           _loadLevel();
         } else {
           // no more levels
+          currentLevelIndex = 0;
+          _loadLevel();
         }
       }
       
