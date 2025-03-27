@@ -4,6 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 //import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
+import 'package:pixel_adventure/components/cat.dart';
 import 'package:pixel_adventure/components/checkpoint.dart';
 import 'package:pixel_adventure/components/chicken.dart';
 import 'package:pixel_adventure/components/collision_block.dart';
@@ -112,6 +113,7 @@ class Player extends SpriteAnimationGroupComponent
       if(other is Fruit) other.collidedWithPlayer();
       if(other is Saw) _respawn();
       if(other is Chicken) other.collidedWithPlayer();
+      if(other is Cat) other.collidedWithPlayer();
       if(other is Checkpoint) _reachedCheckpoint();
       }
 
