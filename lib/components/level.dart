@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:pixel_adventure/components/background_tile.dart';
+import 'package:pixel_adventure/components/cat.dart';
+import 'package:pixel_adventure/components/checkpoint.dart';
+import 'package:pixel_adventure/components/chicken.dart';
 import 'package:pixel_adventure/components/collision_block.dart';
 import 'package:pixel_adventure/components/fruit.dart';
 import 'package:pixel_adventure/components/player.dart';
@@ -31,26 +34,16 @@ class Level extends World with HasGameRef<PixelAdventure>{
   
   void _scrollingBackground() {
     final backgroundLayer = level.tileMap.getLayer('Background');
-    const tileSize = 64;
-
-    final numTilesY = (game.size.y / tileSize).floor();
-    final numTilesX = (game.size.x / tileSize).floor();
 
     if(backgroundLayer != null){
       final backgroundColor = 
-      backgroundLayer.properties.getValue('BackgroundColor');
-
-      for(double y = 0; y < game.size.y / numTilesY; y++) {
-        for(double x = 0; x < numTilesX; x++) {
+          backgroundLayer.properties.getValue('BackgroundColor');
           final backgroundTile = BackgroundTile(
-            color: backgroundColor ?? 'Gray', 
-            position: Vector2(x * tileSize, y * tileSize - tileSize), //- tileSize),
-          );
-
+        color: backgroundColor ?? 'Yellow', 
+        position: Vector2(0, 0),
+      );
           add(backgroundTile);
-        } 
-      }
-    }
+    } 
   }
   
   void _spawningObjects() {
@@ -61,6 +54,7 @@ class Level extends World with HasGameRef<PixelAdventure>{
             switch (spawnPoint.class_) {
               case 'Player':
                 player.position = Vector2(spawnPoint.x, spawnPoint.y);
+                player.scale.x = 1;
                 add(player);
                 break;
               case 'Fruit':
@@ -83,6 +77,30 @@ class Level extends World with HasGameRef<PixelAdventure>{
                 size: Vector2(spawnPoint.width, spawnPoint.height),
               );
               add(saw);
+              break;
+            case 'Checkpoint':
+              final checkpoint = Checkpoint(
+                position: Vector2(spawnPoint.x, spawnPoint.y),
+                size: Vector2(spawnPoint.width, spawnPoint.height),
+              );
+              add(checkpoint);
+              break;
+            case 'Chicken':
+            final offNeg = spawnPoint.properties.getValue('offNeg');
+            final offPos = spawnPoint.properties.getValue('offPos');
+              final chicken = Chicken(
+                position: Vector2(spawnPoint.x, spawnPoint.y),
+                size: Vector2(spawnPoint.width, spawnPoint.height),
+                offNeg: offNeg,
+                offPos: offPos,
+              );
+              add(chicken);
+            case 'Cat':
+            final cat = Cat(
+              position: Vector2(spawnPoint.x, spawnPoint.y),
+              size: Vector2(spawnPoint.width, spawnPoint.height),
+            );
+            add(cat);
             break;
             default:
             }
