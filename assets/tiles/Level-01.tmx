@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="Pixel Adventure.tsx"/>
  <layer id="1" name="Background" width="40" height="23">
   <properties>
-   <property name="BackgroundColor" value="Yellow"/>
+   <property name="BackgroundColor" value="Clouds"/>
   </properties>
   <data encoding="csv">
 24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,
