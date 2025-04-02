@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "216499669843",
+    "project_id": "pixel-adventure-d45aa",
+    "storage_bucket": "pixel-adventure-d45aa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216499669843:android:0409ea9a9f9eb01185efa6",
+        "android_client_info": {
+          "package_name": "com.example.pixel_adventure"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2zu1CcqIcinfI_T1_RgyFCe6KXOZaFHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
