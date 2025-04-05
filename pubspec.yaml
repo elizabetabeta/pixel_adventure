@@ -39,7 +39,8 @@ dependencies:
   flame_tiled: ^1.21.0
   # flame_audio: 2.10.6
   firebase_core: ^2.26.0
-  firebase_auth: ^4.17.7
+  firebase_auth: ^4.16.0
+  firebase_database: ^10.5.7
 
 dev_dependencies:
   flutter_test:

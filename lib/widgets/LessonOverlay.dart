@@ -16,9 +16,15 @@ class LessonOverlay extends StatelessWidget {
                 "Što znači veći, a što manji broj? \n\n  Ako uspoređujemo dva broja, veći broj dolazi nakon manjeg kada brojimo.\n\n\n "
                 "Znakovi usporedbe: \n\n Manje od → <\n\n Veće od → > \n\n Pravilo: Znak uvijek pokazuje prema manjem broju!";
       case 2:
-        return "Level 2: Vrijeme je za prvi matematički zadatak! Riješite ga kako biste nastavili dalje.";
+        return "Level 2 - Množenje : \n Naučit ćete osnovne pojmove postupke množenja ."
+          	"Razumjeti znak × (množenje).\n"
+          
+            "Množenje je matematička operacija kojom zbrajamo isti broj više puta. \n Na primjer, ako želimo zbrojiti broj 3 četiri puta \n (3 + 3 + 3 + 3), to možemo zapisati kao 3 × 4. "
+            ;
       case 3:
-        return "Zadnji level! Kombinirajte matematiku i spretnost kako biste završili igru!";
+        return "Zadnji level - Dijeljenje! Kombinirajte matematiku i spretnost kako biste završili igru!"
+        "Dijeljenje je matematička operacija kojom raspoređujemo broj u jednake dijelove. \n Na primjer, ako imamo 12 jabuka i želimo ih podijeliti među 3 prijatelja, \n svaki će dobiti 4 jabuke, što zapisujemo kao 12 ÷ 3 = 4."
+        "Znak  ÷ (dijeljenje)";
       default:
         return "Dobrodošli u igru!";
     }
