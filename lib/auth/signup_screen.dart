@@ -5,6 +5,9 @@ import 'package:pixel_adventure/auth/login_screen.dart';
 import 'package:pixel_adventure/home_screen.dart';
 import 'package:pixel_adventure/widgets/button.dart';
 import 'package:pixel_adventure/widgets/textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -16,10 +19,11 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final _auth = AuthService();
-
   final _name = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
+
+  late final DatabaseReference _databaseReference;
 
   @override
   void dispose() {
@@ -27,6 +31,17 @@ class _SignupScreenState extends State<SignupScreen> {
     _name.dispose();
     _email.dispose();
     _password.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Firebase.initializeApp().then((_) {
+      _databaseReference = FirebaseDatabase.instanceFor(
+        app: Firebase.app(),
+        databaseURL: "https://pixel-adventure-d45aa-default-rtdb.europe-west1.firebasedatabase.app",
+      ).reference();
+    });
   }
 
   @override
@@ -42,10 +57,15 @@ class _SignupScreenState extends State<SignupScreen> {
             const SizedBox(
               height: 50,
             ),
+            CustomTextField(
+              hint: "Enter Name",
+              label: "Name",
+              controller: _name,
+            ),
             const SizedBox(height: 20),
             CustomTextField(
-              hint: "Enter Username",
-              label: "Username",
+              hint: "Enter Email",
+              label: "Email",
               controller: _email,
             ),
             const SizedBox(height: 20),
@@ -82,14 +102,23 @@ class _SignupScreenState extends State<SignupScreen> {
 
   goToHome(BuildContext context) => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(databaseReference: _databaseReference),
+        ),
       );
 
   _signup() async {
-    final user =
-        await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
+    final user = await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
+
     if (user != null) {
-      log("User Created Succesfully");
+      log("User Created Successfully");
+
+      // spremanje korisnika u Realtime Database s emailom i početnim scoreom zbog leaderboarda
+      await _databaseReference.child("users/${user.uid}").set({
+        'email': _email.text,
+        'points': 0,
+      });
+
       goToHome(context);
     }
   }

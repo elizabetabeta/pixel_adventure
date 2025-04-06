@@ -7,17 +7,16 @@ import 'package:flutter/painting.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PixelAdventure extends FlameGame with 
     HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection, TapCallbacks {
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
-  int currentLevel;
-  static const String catPopupOverlay = 'cat_popup';
-
-  PixelAdventure({required int level}) : currentLevel = level;
-
+  final int level;
+  PixelAdventure({required this.level});
 
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
@@ -115,8 +114,7 @@ class PixelAdventure extends FlameGame with
     );
     camera.viewfinder.anchor = Anchor.topLeft;
 
-    addAll([camera, world]);    
-  });
-}
-
+      addAll([camera, world]);    
+    });
+  }
 }

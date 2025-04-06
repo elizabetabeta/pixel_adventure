@@ -6,10 +6,43 @@ import 'package:pixel_adventure/widgets/button.dart';
 import 'package:pixel_adventure/widgets/LessonOverlay.dart';
 import 'package:pixel_adventure/widgets/cat_popup.dart'; // Import the CatPopup
 import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:pixel_adventure/leaderboard_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  final DatabaseReference databaseReference;
+
+  const HomeScreen({super.key, required this.databaseReference});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final auth = AuthService();
+  User? user;
+  int userScore = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    _listenToUserScore();
+  }
+
+  void _listenToUserScore() {
+    if (user != null) {
+      final userScoreRef = widget.databaseReference.child('users/${user!.uid}/points');
+      userScoreRef.onValue.listen((event) {
+        final score = event.snapshot.value;
+        if (score != null) {
+          setState(() {
+            userScore = int.tryParse(score.toString()) ?? 0;
+          });
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +69,26 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomButton(label: "Level 1", onPressed: () => startGame(context, 1)),
+                CustomButton(label: "Level 1",textColor: Colors.deepPurple, onPressed: () => startGame(context, 1)),
                 const SizedBox(height: 10),
-                CustomButton(label: "Level 2", onPressed: () => startGame(context, 2)),
+                CustomButton(label: "Level 2",textColor: Colors.deepPurple,onPressed: () => startGame(context, 2)),
                 const SizedBox(height: 10),
-                CustomButton(label: "Level 3", onPressed: () => startGame(context, 3)),
+                CustomButton(label: "Level 3",textColor: Colors.deepPurple, onPressed: () => startGame(context, 3)),
+                const SizedBox(height: 10),
+                CustomButton(
+                  label: "Leaderboard",
+                  textColor: Colors.black,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LeaderboardScreen(
+                          databaseReference: widget.databaseReference,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -51,6 +99,7 @@ class HomeScreen extends StatelessWidget {
             right: 20,
             child: CustomButton(
               label: "Sign Out",
+              textColor: Colors.red,
               onPressed: () async {
                 await auth.signout();
                 goToLogin(context);

@@ -1,34 +1,53 @@
 import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:pixel_adventure/auth/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:async';
+import 'package:pixel_adventure/auth/login_screen.dart';
 import 'package:pixel_adventure/home_screen.dart';
-
+import 'package:pixel_adventure/pixel_adventure.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(); // Initialize Firebase
+
+  //  FirebaseApp instance
+  FirebaseApp app = Firebase.app();
+
+  // inicijalizacija Firebase Realtime Database sa URL
+  final databaseReference = FirebaseDatabase.instanceFor(
+    app: app,
+    databaseURL: "https://pixel-adventure-d45aa-default-rtdb.europe-west1.firebasedatabase.app",
+  ).reference();
+
   await Flame.device.fullScreen();
   await Flame.device.setLandscape();
 
-  runApp(const MyApp());
+  runApp(MyApp(databaseReference: databaseReference));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final DatabaseReference databaseReference;
+
+  const MyApp({super.key, required this.databaseReference});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthWrapper(),
+      home: AuthWrapper(databaseReference: databaseReference),
     );
   }
 }
 
 class AuthWrapper extends StatelessWidget {
+  final DatabaseReference databaseReference;
+
+  const AuthWrapper({super.key, required this.databaseReference});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -38,11 +57,9 @@ class AuthWrapper extends StatelessWidget {
           return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
         if (snapshot.hasData) {
-          // Prosljeđivanje levela kao parametra
-          return HomeScreen();
- // Ovdje možeš postaviti početni level
+          return HomeScreen(databaseReference: databaseReference);
         }
-        return LoginScreen();
+        return const LoginScreen();
       },
     );
   }
