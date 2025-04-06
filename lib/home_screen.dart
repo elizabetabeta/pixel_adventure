@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:pixel_adventure/auth/auth_service.dart';
 import 'package:pixel_adventure/auth/login_screen.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:pixel_adventure/widgets/button.dart';
 import 'package:pixel_adventure/widgets/LessonOverlay.dart';
-import 'package:pixel_adventure/widgets/cat_popup.dart'; // Import the CatPopup
+import 'package:pixel_adventure/widgets/cat_popup.dart'; 
 import 'package:flame/game.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:pixel_adventure/leaderboard_screen.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final auth = AuthService();
+  final AuthService auth = AuthService();
   User? user;
   int userScore = 0;
 
@@ -46,25 +47,66 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = AuthService();
-    final User? user = FirebaseAuth.instance.currentUser;
-    final String userEmail = user?.email ?? "Unknown";
+    final userEmail = user?.email ?? "Unknown";
 
     return Scaffold(
       body: Stack(
         children: [
-          // Display user email at the top left
+          // korisnik info
           Positioned(
-            top: 40,
+            top: 30,
             left: 20,
-            child: Text(
-              "Logged in as: $userEmail",
-              style: const TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 6,
+                    offset: const Offset(2, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.person, size: 18, color: Colors.black87),
+                      const SizedBox(width: 6),
+                      Text(
+                        userEmail,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, size: 18, color: Colors.amber),
+                      const SizedBox(width: 6),
+                      Text(
+                        "Score: $userScore",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
 
-          // Buttons to start levels
+          // Buttons
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Sign Out Button
+          // Sign out button
           Positioned(
             top: 40,
             right: 20,

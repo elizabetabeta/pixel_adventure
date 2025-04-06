@@ -7,8 +7,6 @@ import 'package:flutter/painting.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class PixelAdventure extends FlameGame with 
     HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection, TapCallbacks {
@@ -17,6 +15,8 @@ class PixelAdventure extends FlameGame with
 
   final int level;
   PixelAdventure({required this.level});
+  static const String catPopupOverlay = 'cat_popup';
+  int score = 0;
 
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
@@ -92,21 +92,20 @@ class PixelAdventure extends FlameGame with
   void loadNextLevel() {
   removeWhere((component) => component is Level);
 
-  if (currentLevel < levelNames.length) {
-    currentLevel++;  // Move to next level
-  } else {
-    currentLevel = 1; // Restart from first level
+  if (level < levelNames.length) {
+      _loadLevel();
+    } else {
+      // Ako su svi leveli završeni, vraćamo se na početni level
+      _loadLevel();
+    }
   }
-
-  _loadLevel();
-}
 
 
   void _loadLevel() {
   Future.delayed(const Duration(seconds: 1), () {
     Level world = Level(
       player: player,
-      levelName: levelNames[currentLevel - 1],
+      levelName: levelNames[level - 1],
     );
 
     camera = CameraComponent.withFixedResolution(

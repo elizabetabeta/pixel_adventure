@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
+
 enum State { idle, jump }
 
 class Cat extends SpriteAnimationGroupComponent

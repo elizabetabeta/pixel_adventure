@@ -1,14 +1,9 @@
 import 'package:flame/flame.dart';
-import 'package:flame/game.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:pixel_adventure/auth/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pixel_adventure/auth/login_screen.dart';
 import 'package:pixel_adventure/home_screen.dart';
-import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 Future<void> main() async {
