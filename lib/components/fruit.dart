@@ -57,7 +57,7 @@ class Fruit extends SpriteAnimationComponent
     if (!collected) {
       collected = true;
 
-      // Increase game score
+      // Povećaj score
       game.score += 1;
 
       // Update Firebase Database
@@ -69,7 +69,7 @@ class Fruit extends SpriteAnimationComponent
         );
 
         final userRef = database.ref().child('users/${user.uid}/points');
-        await userRef.set(game.score); // Save score to Firebase
+        await userRef.set(game.score); // spremi score u Firebase
       }
 
       // Play collected animation and remove fruit

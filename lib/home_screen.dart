@@ -9,9 +9,6 @@ import 'package:flame/game.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:pixel_adventure/leaderboard_screen.dart';
 
-
-
-
 class HomeScreen extends StatefulWidget {
   final DatabaseReference databaseReference;
 
@@ -54,61 +51,96 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Email + score
+          // korisnik info
           Positioned(
-            top: 40,
+            top: 30,
             left: 20,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 6,
+                    offset: const Offset(2, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.person, size: 18, color: Colors.black87),
+                      const SizedBox(width: 6),
+                      Text(
+                        userEmail,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, size: 18, color: Colors.amber),
+                      const SizedBox(width: 6),
+                      Text(
+                        "Score: $userScore",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Buttons
+          Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Logged in as: $userEmail",
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  "Score: $userScore",
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                CustomButton(label: "Level 1",textColor: Colors.deepPurple, onPressed: () => startGame(context, 1)),
+                const SizedBox(height: 10),
+                CustomButton(label: "Level 2",textColor: Colors.deepPurple,onPressed: () => startGame(context, 2)),
+                const SizedBox(height: 10),
+                CustomButton(label: "Level 3",textColor: Colors.deepPurple, onPressed: () => startGame(context, 3)),
+                const SizedBox(height: 10),
+                CustomButton(
+                  label: "Leaderboard",
+                  textColor: Colors.black,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LeaderboardScreen(
+                          databaseReference: widget.databaseReference,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
           ),
 
-          // Level buttons + leaderboard
-Center(
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      CustomButton(label: "Level 1", onPressed: () => startGame(context, 1)),
-      const SizedBox(height: 10),
-      CustomButton(label: "Level 2", onPressed: () => startGame(context, 2)),
-      const SizedBox(height: 10),
-      CustomButton(label: "Level 3", onPressed: () => startGame(context, 3)),
-      const SizedBox(height: 10),
-      CustomButton(
-        label: "Leaderboard",
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LeaderboardScreen(
-                databaseReference: widget.databaseReference,
-              ),
-            ),
-          );
-        },
-      ),
-    ],
-  ),
-),
-
-
-          // Sign out
+          // Sign out button
           Positioned(
             top: 40,
             right: 20,
             child: CustomButton(
               label: "Sign Out",
+              textColor: Colors.red,
               onPressed: () async {
                 await auth.signout();
                 goToLogin(context);
@@ -119,7 +151,6 @@ Center(
       ),
     );
   }
-  
 
   void startGame(BuildContext context, int level) {
     Navigator.push(

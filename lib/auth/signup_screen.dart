@@ -55,43 +55,71 @@ class _SignupScreenState extends State<SignupScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 60),
+
+              // LOGO
+              Center(
+                child: Image.asset(
+                  'assets/images/logo.png', 
+                  height: 120,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // NASLOV
               const Center(
                 child: Text(
                   "Signup",
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
                 ),
               ),
+
               const SizedBox(height: 50),
+
+              // USERNAME
               CustomTextField(
                 hint: "Enter Username",
                 label: "Username",
                 controller: _email,
               ),
+
               const SizedBox(height: 20),
+
+              // PASSWORD
               CustomTextField(
                 hint: "Enter Password",
                 label: "Password",
                 isPassword: true,
                 controller: _password,
               ),
+
               const SizedBox(height: 30),
+
+              // SIGNUP BUTTON
               Center(
-                 child: CustomButton(
-                 label: "Signup",
-                 onPressed: _signup,
+                child: CustomButton(
+                  label: "Signup",
+                  onPressed: _signup,
+                ),
               ),
-              ),
+
               const SizedBox(height: 10),
+
+              // LOGIN ako vec ima acc
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("Already have an account? "),
                   InkWell(
                     onTap: () => goToLogin(context),
-                    child: const Text("Login", style: TextStyle(color: Colors.red)),
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ),
                 ],
               ),
+
               const SizedBox(height: 30),
             ],
           ),
@@ -118,7 +146,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (user != null) {
       log("User Created Successfully");
 
-      // Spremi korisnika u Realtime Database s emailom i početnim scoreom
+      // spremanje korisnika u Realtime Database s emailom i početnim scoreom zbog leaderboarda
       await _databaseReference.child("users/${user.uid}").set({
         'email': _email.text,
         'points': 0,

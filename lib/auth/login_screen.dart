@@ -36,7 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
     Firebase.initializeApp().then((_) {
       _databaseReference = FirebaseDatabase.instanceFor(
         app: Firebase.app(),
-        databaseURL: "https://pixel-adventure-d45aa-default-rtdb.europe-west1.firebasedatabase.app",
+        databaseURL:
+            "https://pixel-adventure-d45aa-default-rtdb.europe-west1.firebasedatabase.app",
       ).reference();
     });
   }
@@ -52,43 +53,69 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 60),
+
+              // LOGO
+              Center(
+                child: Image.asset(
+                  'assets/images/logo.png', 
+                  height: 120,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // LOGIN NASLOV
               const Center(
                 child: Text(
                   "Login",
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
                 ),
               ),
+
               const SizedBox(height: 50),
+
+              // USERNAME
               CustomTextField(
                 hint: "Enter Username",
                 label: "Username",
                 controller: _email,
               ),
+
               const SizedBox(height: 20),
+
+              // PASSWORD
               CustomTextField(
                 hint: "Enter Password",
                 label: "Password",
                 controller: _password,
                 isPassword: true,
               ),
+
               const SizedBox(height: 30),
+
+              // LOGIN GUMB
               Center(
-               child: CustomButton(
-                 label: "Login",
-                onPressed: _login,
-               ),
+                child: CustomButton(
+                  label: "Login",
+                  onPressed: _login,
+                ),
               ),
+
               const SizedBox(height: 10),
+
+              // LINK NA SIGNUP
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("Don't have an account? "),
                   InkWell(
                     onTap: () => goToSignup(context),
-                    child: const Text("Signup", style: TextStyle(color: Colors.red)),
+                    child: const Text("Signup",
+                        style: TextStyle(color: Colors.red)),
                   ),
                 ],
               ),
+
               const SizedBox(height: 30),
             ],
           ),
@@ -105,12 +132,14 @@ class _LoginScreenState extends State<LoginScreen> {
   goToHome(BuildContext context) => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomeScreen(databaseReference: _databaseReference),
+          builder: (context) =>
+              HomeScreen(databaseReference: _databaseReference),
         ),
       );
 
   _login() async {
-    final user = await _auth.loginUserWithEmailAndPassword(_email.text, _password.text);
+    final user =
+        await _auth.loginUserWithEmailAndPassword(_email.text, _password.text);
 
     if (user != null) {
       log("User Logged In");
