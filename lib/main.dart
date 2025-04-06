@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pixel_adventure/auth/login_screen.dart';
 import 'package:pixel_adventure/home_screen.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
