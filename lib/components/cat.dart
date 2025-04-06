@@ -72,9 +72,11 @@ class Cat extends SpriteAnimationGroupComponent
   }
 
   void collidedWithPlayer() {
-    if(!gotTouched) {
-      gotTouched = true;
-      current = State.jump;
-    }
+  if (!gotTouched) {
+    gotTouched = true;
+    current = State.jump;
+
+    gameRef.overlays.add('cat_popup');
   }
+}
 }

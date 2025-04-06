@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flame/game.dart';
-import 'package:pixel_adventure/pixel_adventure.dart';
+
 
 class LessonOverlay extends StatelessWidget {
   final int level;

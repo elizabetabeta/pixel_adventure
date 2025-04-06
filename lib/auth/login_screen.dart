@@ -39,8 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500)),
             const SizedBox(height: 50),
             CustomTextField(
-              hint: "Enter Email",
-              label: "Email",
+              hint: "Enter Username",
+              label: "Username",
               controller: _email,
             ),
             const SizedBox(height: 20),

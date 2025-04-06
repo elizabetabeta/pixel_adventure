@@ -13,8 +13,11 @@ class PixelAdventure extends FlameGame with
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
-  final int level;
-  PixelAdventure({required this.level});
+  int currentLevel;
+  static const String catPopupOverlay = 'cat_popup';
+
+  PixelAdventure({required int level}) : currentLevel = level;
+
 
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
@@ -33,6 +36,11 @@ class PixelAdventure extends FlameGame with
       add(JumpButton());
     }
     return super.onLoad();
+  }
+
+  // Function to close the overlay
+  void closeOverlay() {
+    overlays.remove(catPopupOverlay);
   }
 
   @override
@@ -83,29 +91,32 @@ class PixelAdventure extends FlameGame with
   }
 
   void loadNextLevel() {
-    removeWhere((component) => component is Level);
-    
-    if (level < levelNames.length) {
-      _loadLevel();
-    } else {
-      // Ako su svi leveli završeni, vraćamo se na početni level
-      _loadLevel();
-    }
+  removeWhere((component) => component is Level);
+
+  if (currentLevel < levelNames.length) {
+    currentLevel++;  // Move to next level
+  } else {
+    currentLevel = 1; // Restart from first level
   }
+
+  _loadLevel();
+}
+
 
   void _loadLevel() {
-    Future.delayed(const Duration(seconds: 1), () {
-      Level world = Level(
-        player: player,
-        levelName: levelNames[level - 1],
-      );
+  Future.delayed(const Duration(seconds: 1), () {
+    Level world = Level(
+      player: player,
+      levelName: levelNames[currentLevel - 1],
+    );
 
-      camera = CameraComponent.withFixedResolution(
-        world: world, width: 640, height: 360
-      );
-      camera.viewfinder.anchor = Anchor.topLeft;
+    camera = CameraComponent.withFixedResolution(
+      world: world, width: 640, height: 360
+    );
+    camera.viewfinder.anchor = Anchor.topLeft;
 
-      addAll([camera, world]);    
-    });
-  }
+    addAll([camera, world]);    
+  });
+}
+
 }
