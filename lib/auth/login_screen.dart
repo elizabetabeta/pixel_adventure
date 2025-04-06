@@ -5,6 +5,8 @@ import 'package:pixel_adventure/auth/signup_screen.dart';
 import 'package:pixel_adventure/home_screen.dart';
 import 'package:pixel_adventure/widgets/button.dart';
 import 'package:pixel_adventure/widgets/textfield.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,9 +18,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = AuthService();
-
   final _email = TextEditingController();
   final _password = TextEditingController();
+
+  late final DatabaseReference _databaseReference;
 
   @override
   void dispose() {
@@ -28,43 +31,94 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Firebase.initializeApp().then((_) {
+      _databaseReference = FirebaseDatabase.instanceFor(
+        app: Firebase.app(),
+        databaseURL:
+            "https://pixel-adventure-d45aa-default-rtdb.europe-west1.firebasedatabase.app",
+      ).reference();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        child: Column(
-          children: [
-            const Spacer(),
-            const Text("Login",
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500)),
-            const SizedBox(height: 50),
-            CustomTextField(
-              hint: "Enter Email",
-              label: "Email",
-              controller: _email,
-            ),
-            const SizedBox(height: 20),
-            CustomTextField(
-              hint: "Enter Password",
-              label: "Password",
-              controller: _password,
-            ),
-            const SizedBox(height: 30),
-            CustomButton(
-              label: "Login",
-              onPressed: _login,
-            ),
-            const SizedBox(height: 5),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Text("Already have an account? "),
-              InkWell(
-                onTap: () => goToSignup(context),
-                child:
-                    const Text("Signup", style: TextStyle(color: Colors.red)),
-              )
-            ]),
-            const Spacer()
-          ],
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 60),
+
+              // LOGO
+              Center(
+                child: Image.asset(
+                  'assets/images/logo.png', 
+                  height: 120,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // LOGIN NASLOV
+              const Center(
+                child: Text(
+                  "Login",
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
+                ),
+              ),
+
+              const SizedBox(height: 50),
+
+              // USERNAME
+              CustomTextField(
+                hint: "Enter Username",
+                label: "Username",
+                controller: _email,
+              ),
+
+              const SizedBox(height: 20),
+
+              // PASSWORD
+              CustomTextField(
+                hint: "Enter Password",
+                label: "Password",
+                controller: _password,
+                isPassword: true,
+              ),
+
+              const SizedBox(height: 30),
+
+              // LOGIN GUMB
+              Center(
+                child: CustomButton(
+                  label: "Login",
+                  onPressed: _login,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // LINK NA SIGNUP
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Don't have an account? "),
+                  InkWell(
+                    onTap: () => goToSignup(context),
+                    child: const Text("Signup",
+                        style: TextStyle(color: Colors.red)),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );
@@ -77,7 +131,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   goToHome(BuildContext context) => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(
+          builder: (context) =>
+              HomeScreen(databaseReference: _databaseReference),
+        ),
       );
 
   _login() async {

@@ -7,6 +7,8 @@ import 'package:flutter/painting.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PixelAdventure extends FlameGame with 
     HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection, TapCallbacks {
@@ -15,6 +17,7 @@ class PixelAdventure extends FlameGame with
 
   final int level;
   PixelAdventure({required this.level});
+  int score = 0;
 
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
@@ -106,4 +109,13 @@ class PixelAdventure extends FlameGame with
       addAll([camera, world]);    
     });
   }
+
+  // Metoda za spremanje bodova u Firebase
+void updateScoreInFirebase() {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("scores/${user.uid}");
+    ref.set(score);
+  }
+}
 }
