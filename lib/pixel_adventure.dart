@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
@@ -17,9 +18,8 @@ class PixelAdventure extends FlameGame with
   int initialScore;
 
   PixelAdventure({required this.level, this.initialScore = 0}) {
-    score = initialScore;
-  }
-
+    score = initialScore; 
+  } 
   static const String catPopupOverlay = 'cat_popup';
   static const String lessonOverlay = 'lesson_overlay';
 
@@ -103,21 +103,17 @@ class PixelAdventure extends FlameGame with
     }
   }
 
-  void loadNextLevel() {
-  removeWhere((component) => component is Level);
-
-  if (level < levelNames.length) {
-    level++;
-  } else {
-    level = 1;
+   void loadNextLevel() {
+    removeWhere((component) => component is Level);
+    
+    if (level < levelNames.length) {
+      level++;
+    } else {
+      level = 1;
+    }
+    loadLevel();
   }
-
-  // Show lesson overlay before loading the level
-  overlays.add(PixelAdventure.lessonOverlay);
-}
-
-
-
+  
   void loadLevel() {
     Future.delayed(const Duration(seconds: 1), () {
       Level world = Level(

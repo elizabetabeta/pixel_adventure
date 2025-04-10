@@ -157,28 +157,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) {
-        final game = PixelAdventure(level: level, initialScore: userScore);
+      builder: (context) => LessonOverlay(
+        level: level,
+        onStart: () {
+          final game = PixelAdventure(level: level, initialScore: userScore);
 
-        return GameWidget(
-          game: game,
-          overlayBuilderMap: {
-            'lesson_overlay': (context, _) => LessonOverlay(
-              level: game.level,
-              onStart: () {
-                game.overlays.remove('lesson_overlay');
-                game.loadLevel(); // rename _loadLevel to loadLevel
-              },
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GameWidget(
+                game: game,
+                overlayBuilderMap: {
+                  'cat_popup': (context, _) => CatPopup(game: game), 
+                },
+              ),
             ),
-            'cat_popup': (context, _) => CatPopup(game: game),
-          },
-          initialActiveOverlays: const ['lesson_overlay'],
-        );
-      },
+          );
+        },
+      ),
     ),
   );
 }
-
 
   void goToLogin(BuildContext context) {
     Navigator.pushReplacement(
