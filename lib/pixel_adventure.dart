@@ -21,6 +21,8 @@ class PixelAdventure extends FlameGame with
   }
 
   static const String catPopupOverlay = 'cat_popup';
+  static const String lessonOverlay = 'lesson_overlay';
+
   int score = 0;
   late TextComponent scoreText; 
   Player player = Player(character: 'Ninja Frog');
@@ -33,7 +35,7 @@ class PixelAdventure extends FlameGame with
   @override
   FutureOr<void> onLoad() async {
     await images.loadAllImages();
-    _loadLevel();
+    loadLevel();
 
     
     scoreText = TextComponent(
@@ -103,17 +105,20 @@ class PixelAdventure extends FlameGame with
 
   void loadNextLevel() {
   removeWhere((component) => component is Level);
-  
+
   if (level < levelNames.length) {
     level++;
   } else {
     level = 1;
   }
-  _loadLevel();
+
+  // Show lesson overlay before loading the level
+  overlays.add(PixelAdventure.lessonOverlay);
 }
 
 
-  void _loadLevel() {
+
+  void loadLevel() {
     Future.delayed(const Duration(seconds: 1), () {
       Level world = Level(
         player: player,
