@@ -160,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) => LessonOverlay(
         level: level,
         onStart: () {
-          final game = PixelAdventure(level: level); // Create the game instance
+          final game = PixelAdventure(level: level, initialScore: userScore);
 
           Navigator.pushReplacement(
             context,
@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context) => GameWidget(
                 game: game,
                 overlayBuilderMap: {
-                  'cat_popup': (context, _) => CatPopup(game: game), // Pass the game instance
+                  'cat_popup': (context, _) => CatPopup(game: game),
                 },
               ),
             ),

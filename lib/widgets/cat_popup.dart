@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:pixel_adventure/components/floating_text.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,12 +54,19 @@ class _CatPopupState extends State<CatPopup> {
  void handleAnswer(String selectedAnswer) async {
   bool isCorrect = selectedAnswer == correctAnswer;
 
-  // Add 10 points to game score if the answer is correct
   if (isCorrect) {
-    widget.game.score += 10;  // Use widget.game to access the score
+    widget.game.updateScore(10);
+
+    // 👇 Add floating +10 text on screen
+    widget.game.add(
+      FloatingText(
+        position: widget.game.player.position.clone() + Vector2(45, 10), 
+        text: '+10',
+        color: const Color.fromARGB(255, 89, 255, 0),
+      ),
+    );
   }
 
-  // Update Firebase Database
   final user = FirebaseAuth.instance.currentUser;
   if (user != null) {
     final database = FirebaseDatabase.instanceFor(
@@ -65,23 +74,17 @@ class _CatPopupState extends State<CatPopup> {
       databaseURL: "https://pixel-adventure-d45aa-default-rtdb.europe-west1.firebasedatabase.app",
     );
 
-    // Reference to the current user's points
     final userRef = database.ref().child('users/${user.uid}/points');
 
-    // Get the current points from Firebase
     final snapshot = await userRef.once();
     int currentPoints = snapshot.snapshot.value != null
         ? (snapshot.snapshot.value as int)
         : 0;
 
-    // Calculate new score
     int newScore = currentPoints + (isCorrect ? 10 : 0);
-
-    // Update the points in Firebase
     await userRef.set(newScore);
   }
 
-  // Update UI
   setState(() {
     resultMessage = isCorrect ? "Točno!" : "Netočno!";
     answered = true;

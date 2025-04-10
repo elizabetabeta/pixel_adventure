@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/painting.dart';
+import 'package:flutter/material.dart';
 import 'package:pixel_adventure/components/jump_button.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
@@ -13,11 +13,16 @@ class PixelAdventure extends FlameGame with
   @override
   Color backgroundColor() => const Color(0xFF211F30);
 
-  final int level;
-  PixelAdventure({required this.level});
+  int level;
+  int initialScore;
+
+  PixelAdventure({required this.level, this.initialScore = 0}) {
+    score = initialScore;
+  }
+
   static const String catPopupOverlay = 'cat_popup';
   int score = 0;
-
+  late TextComponent scoreText; 
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
   bool showControls = true;
@@ -30,6 +35,15 @@ class PixelAdventure extends FlameGame with
     await images.loadAllImages();
     _loadLevel();
 
+    
+    scoreText = TextComponent(
+      text: 'Score: $score',
+      position: Vector2(10, 10), 
+      priority: 2,
+      textRenderer: TextPaint(style: TextStyle(color: Colors.white, fontSize: 20)),
+    );
+    add(scoreText);  
+
     if (showControls) {
       addJoystick();
       add(JumpButton());
@@ -37,9 +51,9 @@ class PixelAdventure extends FlameGame with
     return super.onLoad();
   }
 
-  // Function to close the overlay
-  void closeOverlay() {
-    overlays.remove(catPopupOverlay);
+  void updateScore(int points) {
+    score += points;
+    scoreText.text = 'Score: $score'; 
   }
 
   @override
@@ -50,23 +64,21 @@ class PixelAdventure extends FlameGame with
     super.update(dt);
   }
 
-    void addJoystick() {
-        joystick = JoystickComponent(
-            priority: 10,
-            knob: SpriteComponent(
-                sprite: Sprite(
-                    images.fromCache('HUD/Knob.png'),
-                ),
+  void addJoystick() {
+    joystick = JoystickComponent(
+        priority: 10,
+        knob: SpriteComponent(
+            sprite: Sprite(
+                images.fromCache('HUD/Knob.png'),
             ),
-            //knobRadius: 32,
-            background: SpriteComponent(
-                sprite: Sprite(
-                    images.fromCache('HUD/Joystick.png'),
-                ),
+        ),
+        background: SpriteComponent(
+            sprite: Sprite(
+                images.fromCache('HUD/Joystick.png'),
             ),
-            margin: const EdgeInsets.only(left: 32, bottom: 32),
-
-        );
+        ),
+        margin: const EdgeInsets.only(left: 32, bottom: 32),
+    );
 
     add(joystick);
   }
@@ -91,27 +103,27 @@ class PixelAdventure extends FlameGame with
 
   void loadNextLevel() {
   removeWhere((component) => component is Level);
-
+  
   if (level < levelNames.length) {
-      _loadLevel();
-    } else {
-      // Ako su svi leveli završeni, vraćamo se na početni level
-      _loadLevel();
-    }
+    level++;
+  } else {
+    level = 1;
   }
+  _loadLevel();
+}
 
 
   void _loadLevel() {
-  Future.delayed(const Duration(seconds: 1), () {
-    Level world = Level(
-      player: player,
-      levelName: levelNames[level - 1],
-    );
+    Future.delayed(const Duration(seconds: 1), () {
+      Level world = Level(
+        player: player,
+        levelName: levelNames[level - 1],
+      );
 
-    camera = CameraComponent.withFixedResolution(
-      world: world, width: 640, height: 360
-    );
-    camera.viewfinder.anchor = Anchor.topLeft;
+      camera = CameraComponent.withFixedResolution(
+        world: world, width: 640, height: 360
+      )..priority=1;
+      camera.viewfinder.anchor = Anchor.topLeft;
 
       addAll([camera, world]);    
     });

@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 import 'package:pixel_adventure/components/custom_hitbox.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:pixel_adventure/components/floating_text.dart';
+
 
 class Fruit extends SpriteAnimationComponent
     with HasGameRef<PixelAdventure>, CollisionCallbacks {
@@ -57,10 +60,16 @@ class Fruit extends SpriteAnimationComponent
   if (!collected) {
     collected = true;
 
-    // Increase the game score
-    game.score += 1;
+    game.updateScore(1);
 
-    // Update Firebase Database
+    game.add(
+      FloatingText(
+        position: position + Vector2(100, 30),
+        text: '+1',
+        color: const Color.fromARGB(255, 89, 255, 0),
+      ),
+    );
+
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final database = FirebaseDatabase.instanceFor(
@@ -68,30 +77,28 @@ class Fruit extends SpriteAnimationComponent
         databaseURL: "https://pixel-adventure-d45aa-default-rtdb.europe-west1.firebasedatabase.app",
       );
 
-      // Reference the points of the currently logged-in user
       final userRef = database.ref().child('users/${user.uid}/points');
 
-      // Get the current points from Firebase
       final snapshot = await userRef.once();
+      int currentPoints = 0;
+      if (snapshot.snapshot.value != null) {
+        final value = snapshot.snapshot.value;
+        if (value is int) {
+          currentPoints = value;
+        } else if (value is String) {
+          currentPoints = int.tryParse(value) ?? 0;
+        }
+      }
+      int newScore = currentPoints + 1;
 
-      // Safely cast the value to int (if the value exists)
-      int currentPoints = snapshot.snapshot.value != null
-          ? (snapshot.snapshot.value as int)
-          : 0;
 
-      // Add the newly collected points to the current score
-      int newScore = currentPoints + 1;  // Increment by 1 for each collected fruit
-
-      // Save the new score back to Firebase for the logged-in user
       await userRef.set(newScore);
 
-      // Optional: You can also add a print statement to confirm the update
-      print("User ${user.email} new score: $newScore");
-      print("Updating points for user: ${user.email} (${user.uid})");
+      //print("User ${user.email} new score: $newScore");
+      //print("Updating points for user: ${user.email} (${user.uid})");
 
     }
 
-    // Play collected animation and remove fruit
     animation = SpriteAnimation.fromFrameData(
       game.images.fromCache('Items/Fruits/Collected.png'),
       SpriteAnimationData.sequenced(

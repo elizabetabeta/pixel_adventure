@@ -8,12 +8,10 @@ import 'package:firebase_database/firebase_database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Initialize Firebase
+  await Firebase.initializeApp(); 
 
-  //  FirebaseApp instance
   FirebaseApp app = Firebase.app();
 
-  // inicijalizacija Firebase Realtime Database sa URL
   final databaseReference = FirebaseDatabase.instanceFor(
     app: app,
     databaseURL: "https://pixel-adventure-d45aa-default-rtdb.europe-west1.firebasedatabase.app",
