@@ -5,7 +5,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:pixel_adventure/components/floating_text.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class CatPopup extends StatefulWidget {
   final PixelAdventure game;
@@ -57,7 +56,6 @@ class _CatPopupState extends State<CatPopup> {
   if (isCorrect) {
     widget.game.updateScore(10);
 
-    // 👇 Add floating +10 text on screen
     widget.game.add(
       FloatingText(
         position: widget.game.player.position.clone() + Vector2(45, 10), 

@@ -12,6 +12,7 @@ import 'package:pixel_adventure/components/level.dart';
 class PixelAdventure extends FlameGame with 
     HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection, TapCallbacks {
   @override
+  //bool debugMode = true;
   Color backgroundColor() => const Color(0xFF211F30);
 
   int level;

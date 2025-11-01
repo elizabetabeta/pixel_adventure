@@ -1,11 +1,9 @@
 import 'dart:developer';
-
 import 'package:pixel_adventure/auth/auth_service.dart';
 import 'package:pixel_adventure/auth/login_screen.dart';
 import 'package:pixel_adventure/home_screen.dart';
 import 'package:pixel_adventure/widgets/button.dart';
 import 'package:pixel_adventure/widgets/textfield.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';

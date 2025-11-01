@@ -23,6 +23,7 @@ class Player extends SpriteAnimationGroupComponent
     with HasGameRef<PixelAdventure>, KeyboardHandler, CollisionCallbacks {
 
   String character;
+  //bool debugMode = true;
   // ignore: use_super_parameters
   Player({position, this.character = 'Ninja Frog'}) : super(position: position);
 
